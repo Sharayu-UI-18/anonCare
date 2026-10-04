@@ -84,6 +84,20 @@
 .calendar-card { margin-bottom: 16px; }.calendar-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 24px; }.calendar-heading h2 { margin: 5px 0 0; }.calendar-actions { display: flex; align-items: center; gap: 4px; }.calendar-actions .button { padding: 9px 11px; }.weekday-row { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; color: var(--muted); font-size: 10px; }.full-weekdays { margin-bottom: 8px; font-size: 12px; }.month-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }.month-days button, .mini-days button { border: 0; background: transparent; color: var(--deep); border-radius: 50%; cursor: pointer; aspect-ratio: 1; min-width: 0; }.month-days button:hover:not(:disabled), .mini-days button:hover:not(:disabled) { background: var(--mint); }.month-days button:disabled, .mini-days button:disabled { cursor: default; }.period-day { background: #f4c1cb !important; color: #7b2c3d !important; font-weight: 800; }.today-day { outline: 2px solid var(--green) !important; outline-offset: -2px; }.year-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px 16px; }.mini-calendar strong { display: block; color: var(--deep); font-size: 13px; margin-bottom: 9px; }.mini-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; margin-top: 5px; }.mini-days button { font-size: 10px; }
 .cycle-summary { padding: 0; }.details-card .cycle-summary { margin-top: 20px; }.details-card .form-actions { margin-top: 24px; }.form-card { overflow: hidden; }.form-card .card-top { margin-bottom: 4px; }
 fieldset { border: 0; padding: 0; margin: 0; }.field select { appearance: auto; }.choice-row { display: flex; flex-wrap: wrap; gap: 7px; }.choice { display: inline-flex; align-items: center; gap: 6px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; color: var(--muted); font-size: 12px; font-weight: 600; cursor: pointer; }.choice:has(input:checked) { border-color: #e98b9d; color: #7b2c3d; background: #fff4f6; }.choice input { accent-color: var(--green); }.form-card legend { color: var(--deep); font-size: 13px; font-weight: 700; margin-bottom: 8px; }.form-card legend span { color: var(--muted); font-size: 11px; font-weight: 400; }.stats-card { margin-top: 16px; }.stats-card h2 { margin-top: 5px; }.stats-card > p { margin-top: 0; }.stats-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 22px; }.stats-grid div { border-left: 2px solid #e98b9d; padding: 4px 10px; }.stats-grid strong { display: block; color: var(--deep); font-size: 20px; }.stats-grid span { display: block; color: var(--muted); font-size: 11px; margin-top: 4px; }
+.ask-form { display: grid; gap: 16px; margin-top: 24px; }
+.ask-form .field textarea { min-height: 150px; }
+.anonymous-option { display: flex; align-items: center; gap: 9px; color: var(--deep); font-size: 14px; font-weight: 700; }
+.anonymous-option input { accent-color: var(--green); width: 16px; height: 16px; }
+.ask-form .privacy-note, .answer-disclaimer { color: var(--muted); font-size: 13px; line-height: 1.5; }
+.form-error { color: #a12622; font-size: 14px; }
+.answer-card { margin-top: 20px; }
+.answer-card .answer-text { color: var(--deep); font-size: 15px; line-height: 1.7; white-space: pre-line; }
+.answer-sources { margin-top: 22px; }
+.answer-sources h3 { font-size: 14px; }
+.answer-sources ul { margin: 8px 0 0; padding-left: 20px; }
+.answer-sources a { color: var(--green); }
+.doctor-guidance { margin-top: 18px !important; padding: 12px 14px; border-radius: 8px; background: #fff5e8; color: #754910 !important; line-height: 1.5; }
+.answer-disclaimer { border-top: 1px solid var(--line); margin-top: 20px; padding-top: 14px; }
 @media (max-width: 780px) {
   .app-layout { display: block; }
   .sidebar { width: 100%; padding: 0; border-right: 0; border-bottom: 1px solid var(--line); }

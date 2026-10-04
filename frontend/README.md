@@ -1,5 +1,21 @@
 # React + TypeScript + Vite
 
+## HerHealth API
+
+Start the FastAPI backend from the repository's `backend` directory:
+
+```sh
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env
+uvicorn app.main:app --reload --env-file .env
+```
+
+Set `LLM_API_KEY` to enable the OpenAI-compatible LLM integration. Without a key, matching questions receive a source-grounded answer directly from the curated health corpus. Set `VITE_API_BASE_URL` if the backend is not at `http://localhost:8000`.
+
+Run backend tests with `pip install -r requirements-dev.txt && python -m pytest` from `backend`. The API does not store cycle or wellness records and sends only the submitted question and retrieved public health context to the LLM.
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:
