@@ -116,3 +116,91 @@ export function getCycleData(): CycleRecord | null {
 export function saveCycleData(data: CycleRecord): void {
   saveCycleRecord(data)
 }
+
+export const WELLNESS_STORAGE_KEY = 'herhealth_wellness_data'
+export const WELLNESS_MOODS = ['Happy', 'Neutral', 'Low', 'Anxious', 'Irritable', 'Tired', 'Energetic'] as const
+export const SLEEP_QUALITIES = ['Poor', 'Fair', 'Good', 'Excellent'] as const
+export const WELLNESS_APPETITES = ['Decreased', 'Normal', 'Increased'] as const
+export type WellnessMood = typeof WELLNESS_MOODS[number]
+export type SleepQuality = typeof SLEEP_QUALITIES[number]
+export type WellnessAppetite = typeof WELLNESS_APPETITES[number]
+
+export interface WellnessRecord {
+  id: string
+  date: string
+  mood: WellnessMood
+  energy: number
+  sleepHours: number
+  sleepQuality: SleepQuality
+  appetite: WellnessAppetite
+  notes?: string
+}
+
+export type WellnessPeriod = 'week' | 'month' | '3months' | '6months'
+
+function isWellnessRecord(value: unknown): value is WellnessRecord {
+  if (!value || typeof value !== 'object') return false
+  const data = value as Record<string, unknown>
+  return typeof data.id === 'string' && isValidDate(data.date) && isOneOf(data.mood, WELLNESS_MOODS) && typeof data.energy === 'number' && data.energy >= 1 && data.energy <= 5 && typeof data.sleepHours === 'number' && data.sleepHours >= 0 && data.sleepHours <= 24 && isOneOf(data.sleepQuality, SLEEP_QUALITIES) && isOneOf(data.appetite, WELLNESS_APPETITES) && (data.notes === undefined || typeof data.notes === 'string')
+}
+
+function readWellnessRecords(): WellnessRecord[] {
+  try {
+    const storedData = window.localStorage.getItem(WELLNESS_STORAGE_KEY)
+    if (!storedData) return []
+    const parsedData: unknown = JSON.parse(storedData)
+    return Array.isArray(parsedData) ? parsedData.filter(isWellnessRecord) : []
+  } catch {
+    return []
+  }
+}
+
+function writeWellnessRecords(records: WellnessRecord[]): void {
+  try {
+    window.localStorage.setItem(WELLNESS_STORAGE_KEY, JSON.stringify(records))
+  } catch {
+    return
+  }
+}
+
+export function getWellnessHistory(): WellnessRecord[] {
+  return readWellnessRecords().sort((first, second) => second.date.localeCompare(first.date))
+}
+
+export function saveWellnessRecord(record: Omit<WellnessRecord, 'id'> | WellnessRecord): WellnessRecord {
+  const savedRecord = 'id' in record ? record : { ...record, id: `wellness-${record.date}` }
+  const records = readWellnessRecords().filter((item) => item.date !== savedRecord.date && item.id !== savedRecord.id)
+  writeWellnessRecords([...records, savedRecord])
+  return savedRecord
+}
+
+export function updateWellnessRecord(record: WellnessRecord): WellnessRecord {
+  return saveWellnessRecord(record)
+}
+
+export function deleteWellnessRecord(id: string): void {
+  writeWellnessRecords(readWellnessRecords().filter((record) => record.id !== id))
+}
+
+export function clearWellnessHistory(): void {
+  try {
+    window.localStorage.removeItem(WELLNESS_STORAGE_KEY)
+  } catch {
+    return
+  }
+}
+
+export function getRecordsForPeriod(records: WellnessRecord[], period: WellnessPeriod, now = new Date()): WellnessRecord[] {
+  const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()))
+  let start = new Date(today)
+  if (period === 'week') {
+    start.setUTCDate(today.getUTCDate() - today.getUTCDay())
+  } else if (period === 'month') {
+    start = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), 1))
+  } else {
+    start = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth() - (period === '3months' ? 2 : 5), 1))
+  }
+  const startKey = start.toISOString().slice(0, 10)
+  const endKey = today.toISOString().slice(0, 10)
+  return records.filter((record) => record.date >= startKey && record.date <= endKey)
+}
