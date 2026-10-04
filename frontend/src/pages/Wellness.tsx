@@ -1,0 +1,5 @@
+import { HeartPulse } from 'lucide-react'
+import Card from '../components/Card'
+import PageHeader from '../components/PageHeader'
+
+export default function Wellness() { return <><PageHeader eyebrow="Daily check-in" title="Wellness" description="Small check-ins can help you notice the bigger picture." icon={HeartPulse} /><div className="grid dashboard-grid"><Card><h2>Mood</h2><p>How are you feeling today?</p><div className="landing-actions"><button className="button button-secondary" type="button">Good</button><button className="button button-secondary" type="button">Okay</button><button className="button button-secondary" type="button">Low</button></div></Card><Card><h2>Sleep</h2><p>How did you sleep last night?</p><div className="landing-actions"><button className="button button-secondary" type="button">Log sleep</button></div></Card><Card><h2>Symptoms</h2><p>Track anything you want to remember for later.</p><div className="landing-actions"><button className="button button-primary" type="button">Add symptom</button></div></Card></div></> }
