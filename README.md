@@ -1,4 +1,4 @@
-```markdown
+
 # 🌸 HerHealth
 
 ### A Smarter Way to Access Women's Healthcare
@@ -154,12 +154,4 @@ HerHealth provides general health information for educational purposes only. It 
 ### 🌸 HerHealth
 
 **Your health. Your privacy. Your choice.**
-```
 
-**One more small change I made:** I added the missing sentence:
-
-> `API keys are stored only on the backend and are never exposed in the frontend.`
-
-That's useful for your privacy/security explanation.
-
-Also, since you currently have **6 screenshots**, that's fine for the README, although if this is for the hackathon submission itself, I'd choose the **best 4** rather than all 6.
