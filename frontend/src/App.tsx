@@ -8,9 +8,8 @@ import Dashboard from './pages/Dashboard'
 import Doctors from './pages/Doctors'
 import Insights from './pages/Insights'
 import Landing from './pages/Landing'
-import Login from './pages/Login'
+import Onboarding from './pages/Onboarding'
 import Privacy from './pages/Privacy'
-import Signup from './pages/Signup'
 import Wellness from './pages/Wellness'
 
 function AppLayout() {
@@ -18,7 +17,7 @@ function AppLayout() {
 }
 
 function App() {
-  return <BrowserRouter><Routes><Route path="/" element={<Landing />} /><Route path="/login" element={<Login />} /><Route path="/signup" element={<Signup />} /><Route path="/*" element={<AppLayout />} /></Routes></BrowserRouter>
+  return <BrowserRouter><Routes><Route path="/" element={<Landing />} /><Route path="/start" element={<Onboarding />} /><Route path="/*" element={<AppLayout />} /></Routes></BrowserRouter>
 }
 
 export default App

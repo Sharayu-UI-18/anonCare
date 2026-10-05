@@ -1,4 +1,75 @@
 export const CYCLE_STORAGE_KEY = 'herhealth_cycle_data'
+export const USER_PROFILE_STORAGE_KEY = 'herhealth_user_profile'
+
+export type PeriodsRegular = 'yes' | 'no' | 'sometimes' | 'not_sure' | 'prefer_not_to_say'
+export type PeriodPain = 'never' | 'rarely' | 'sometimes' | 'often' | 'almost_every_period' | 'prefer_not_to_say'
+export type PeriodFlow = 'light' | 'medium' | 'heavy' | 'varies' | 'not_sure' | 'prefer_not_to_say'
+export type CycleMoodChanges = 'never' | 'sometimes' | 'often' | 'almost_every_cycle' | 'not_sure' | 'prefer_not_to_say'
+export type PregnancyStatus = 'no' | 'pregnant' | 'recently_postpartum' | 'prefer_not_to_say'
+
+export interface UserProfile {
+  anonymousId: string
+  age?: number
+  periodsRegular?: PeriodsRegular
+  periodPain?: PeriodPain
+  periodFlow?: PeriodFlow
+  periodSymptoms?: string[]
+  cycleMoodChanges?: CycleMoodChanges
+  pregnancyStatus?: PregnancyStatus
+  trackingPreferences?: string[]
+  createdAt: string
+}
+
+function isUserProfile(value: unknown): value is UserProfile {
+  if (!value || typeof value !== 'object') return false
+  const data = value as Record<string, unknown>
+  return typeof data.anonymousId === 'string' && /^HH-[A-Z0-9]{7}$/.test(data.anonymousId) && typeof data.createdAt === 'string'
+}
+
+function generateAnonymousId(): string {
+  const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
+  const values = new Uint32Array(7)
+  crypto.getRandomValues(values)
+  return `HH-${Array.from(values, (value) => alphabet[value % alphabet.length]).join('')}`
+}
+
+export function getUserProfile(): UserProfile | null {
+  try {
+    const storedData = window.localStorage.getItem(USER_PROFILE_STORAGE_KEY)
+    if (!storedData) return null
+    const parsedData: unknown = JSON.parse(storedData)
+    return isUserProfile(parsedData) ? parsedData : null
+  } catch {
+    return null
+  }
+}
+
+export function hasUserProfile(): boolean {
+  return getUserProfile() !== null
+}
+
+export function saveUserProfile(profile: Omit<UserProfile, 'anonymousId' | 'createdAt'> & Partial<Pick<UserProfile, 'anonymousId' | 'createdAt'>> = {}): UserProfile {
+  const existing = getUserProfile()
+  const savedProfile: UserProfile = {
+    ...profile,
+    anonymousId: existing?.anonymousId ?? profile.anonymousId ?? generateAnonymousId(),
+    createdAt: existing?.createdAt ?? profile.createdAt ?? new Date().toISOString(),
+  }
+  try {
+    window.localStorage.setItem(USER_PROFILE_STORAGE_KEY, JSON.stringify(savedProfile))
+  } catch {
+    return savedProfile
+  }
+  return savedProfile
+}
+
+export function clearUserProfile(): void {
+  try {
+    window.localStorage.removeItem(USER_PROFILE_STORAGE_KEY)
+  } catch {
+    return
+  }
+}
 
 export const FLOW_OPTIONS = ['Light', 'Medium', 'Heavy', 'Very heavy'] as const
 export const PAIN_OPTIONS = ['None', 'Mild', 'Moderate', 'Severe'] as const
