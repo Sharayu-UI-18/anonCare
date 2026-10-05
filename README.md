@@ -40,8 +40,8 @@ Knowledge Base Retrieval
 Google Gemini
      ↓
 Answer + Sources + Safety Information
+'''
 
-```markdown
 The AI provides general health information only. It does not diagnose conditions, prescribe medication, or provide treatment plans.
 
 ## 🔒 Privacy
@@ -54,7 +54,7 @@ The AI request contains only the user's question:
 {
   "question": "What is PCOS?"
 }
-```
+
 
 Cycle history, wellness history, mood, sleep, and other local tracking data are not automatically sent to the AI.
 
