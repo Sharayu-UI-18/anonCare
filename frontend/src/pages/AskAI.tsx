@@ -7,21 +7,23 @@ import { askHealthQuestion, type AskResponse } from '../services/api'
 
 export default function AskAI() {
   const [question, setQuestion] = useState('')
-  const [anonymous, setAnonymous] = useState(true)
   const [answer, setAnswer] = useState<AskResponse | null>(null)
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    const trimmedQuestion = question.trim()
+    if (!trimmedQuestion) return
+
     setError('')
     setAnswer(null)
     setIsLoading(true)
 
     try {
-      setAnswer(await askHealthQuestion({ question: question.trim(), anonymous }))
-    } catch (submitError) {
-      setError(submitError instanceof Error ? submitError.message : 'Something went wrong. Please try again.')
+      setAnswer(await askHealthQuestion({ question: trimmedQuestion }))
+    } catch {
+      setError("We couldn't connect to the health assistant right now. Please try again.")
     } finally {
       setIsLoading(false)
     }
@@ -50,11 +52,7 @@ export default function AskAI() {
               placeholder="e.g. What can cause changes in my cycle?"
             />
           </label>
-          <label className="anonymous-option">
-            <input type="checkbox" checked={anonymous} onChange={(event) => setAnonymous(event.target.checked)} />
-            Ask in Anonymous Mode
-          </label>
-          <p className="privacy-note">Only your question and Anonymous Mode setting are sent to the answer service. Cycle, mood, sleep, and symptom history stay on this device.</p>
+          <p className="privacy-note">Only your question is sent to the health assistant. Cycle, wellness, and other tracking data stay on this device.</p>
           {error && <p className="form-error" role="alert">{error}</p>}
           <Button type="submit" disabled={isLoading || !question.trim()}>
             <Send size={16} />{isLoading ? 'Getting information…' : 'Ask anonymously'}
@@ -64,6 +62,11 @@ export default function AskAI() {
       {answer && (
         <Card className="answer-card">
           <h2>General information</h2>
+          {answer.urgent && (
+            <p className="urgent-guidance" role="alert">
+              Your symptoms may need urgent attention. Please seek immediate medical care or contact your local emergency services now.
+            </p>
+          )}
           <p className="answer-text">{answer.answer}</p>
           {answer.sources.length > 0 && (
             <div className="answer-sources">
