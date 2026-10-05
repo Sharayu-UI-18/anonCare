@@ -16,3 +16,4 @@ class AskResponse(BaseModel):
     sources: list[Source]
     disclaimer: str
     should_consult_doctor: bool
+    urgent: bool = False

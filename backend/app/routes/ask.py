@@ -30,12 +30,13 @@ async def ask_question(request: AskRequest) -> AskResponse:
         raise HTTPException(status_code=422, detail="Question must not be blank.")
 
     if is_emergency(question):
-        return AskResponse(
-            answer=EMERGENCY_ANSWER,
-            sources=[],
-            disclaimer=DISCLAIMER,
-            should_consult_doctor=True,
-        )
+    	return AskResponse(
+        	answer=EMERGENCY_ANSWER,
+        	sources=[],
+        	disclaimer=DISCLAIMER,
+        	should_consult_doctor=True,
+        	urgent=True,
+    	)        
 
     documents = retrieve(question)
     sources = [
@@ -80,4 +81,5 @@ async def ask_question(request: AskRequest) -> AskResponse:
             is_unsafe_generated_answer(generated_answer or "")
             or should_consult_doctor(question, generated_answer or "")
         ),
+	urgent=False,
     )

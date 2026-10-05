@@ -20,7 +20,31 @@
   {
     "title": "NHS: Period problems",
     "url": "https://www.nhs.uk/conditions/periods/period-problems/",
-    "keywords": "period pain heavy bleeding period problems doctor healthcare professional",
+    "keywords": "period pain heavy bleeding period problems doctor healthcare professional severe bleeding urgent",
     "content": "Period problems can have different causes. Seek medical advice if period pain or bleeding is severe, affects daily life, or is a change from what is usual for you. Sudden severe pain or very heavy bleeding may need urgent assessment."
+  },
+  {
+    "title": "NHS: Premenstrual syndrome (PMS)",
+    "url": "https://www.nhs.uk/conditions/pre-menstrual-syndrome/",
+    "keywords": "pms premenstrual syndrome symptoms before period mood changes irritability bloating breast tenderness headaches tiredness",
+    "content": "Premenstrual syndrome (PMS) can cause symptoms in the days or weeks before a period. Symptoms can include mood changes, irritability, feeling upset or anxious, tiredness, difficulty sleeping, bloating, breast tenderness, headaches and changes in appetite. Symptoms can vary between people and may change over time."
+  },
+  {
+    "title": "NHS: Period pain",
+    "url": "https://www.nhs.uk/conditions/period-pain/",
+    "keywords": "period pain cramps menstrual pain abdominal pain painful periods dysmenorrhoea",
+    "content": "Period pain is common and usually happens around the start of a period. It can feel like painful cramps in the lower abdomen and may last for several days. See a healthcare professional if the pain is severe, getting worse, or affecting daily activities."
+  },
+  {
+    "title": "NHS: Mental health and wellbeing",
+    "url": "https://www.nhs.uk/mental-health/",
+    "keywords": "mental health stress anxiety depression mood wellbeing sleep emotional health",
+    "content": "Mental health can affect how a person thinks, feels and behaves. Looking after mental wellbeing can include getting enough sleep, staying physically active, maintaining connections with other people and seeking support when difficulties are affecting everyday life."
+  },
+  {
+    "title": "NHS: Women's health",
+    "url": "https://www.nhs.uk/womens-health/",
+    "keywords": "womens health periods reproductive health contraception pregnancy menstrual health health",
+    "content": "Women's health includes areas such as menstrual health, reproductive health, pregnancy and contraception. Symptoms that are persistent, severe, unusual for you or affecting daily life may need assessment from a healthcare professional."
   }
 ]
