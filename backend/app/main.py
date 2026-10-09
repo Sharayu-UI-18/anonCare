@@ -10,8 +10,11 @@ from app.routes import ask, health
 app = FastAPI(title="HerHealth API", version="0.1.0")
 
 allowed_origins = [
-    origin.strip()
-    for origin in os.getenv("ALLOWED_ORIGINS", "http://localhost:5173").split(",")
+    origin.strip().rstrip("/")
+    for origin in os.getenv(
+        "ALLOWED_ORIGINS",
+        "http://localhost:5173,https://anon-care-omega.vercel.app"
+    ).split(",")
     if origin.strip()
 ]
 app.add_middleware(
