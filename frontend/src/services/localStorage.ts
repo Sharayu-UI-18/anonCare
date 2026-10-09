@@ -438,3 +438,86 @@ export function deleteMedicalDocument(id: string): MedicalDocument[] {
   writeJson(RECORDS_STORAGE_KEY, next)
   return next
 }
+
+export type DoctorVerificationStatus = 'unverified' | 'checking' | 'verified' | 'failed'
+export type DoctorSpecialization = 'Gynecology' | 'Obstetrics' | 'Reproductive Health' | 'Mental Wellness' | 'Dermatology' | 'Nutrition' | 'Other'
+
+export interface DoctorRegistration {
+  fullName: string
+  registrationYear: number
+  nmcRegistrationNumber: string
+  stateMedicalCouncil?: string
+}
+
+export interface DoctorAvailability {
+  days: string[]
+  slots: string[]
+}
+
+export interface DoctorProfessionalProfile {
+  specialization: DoctorSpecialization
+  qualifications: string
+  experience: number
+  bio: string
+  clinicName: string
+  clinicAddress: string
+  city: string
+  openingTime: string
+  closingTime: string
+  clinicDays: string[]
+  onlineConsultations: boolean
+  consultationTypes: ConsultationType[]
+  onlineAvailability: DoctorAvailability
+  consultationPrices: { chat?: number; video?: number }
+}
+
+export interface RegisteredDoctor {
+  id: string
+  registration: DoctorRegistration
+  profile: DoctorProfessionalProfile
+  verification: DoctorVerificationStatus
+  createdAt: string
+}
+
+const DOCTOR_PROFILE_STORAGE_KEY = 'herhealth_registered_doctor'
+const DOCTOR_SESSION_STORAGE_KEY = 'herhealth_doctor_session'
+const DOCTOR_DRAFT_STORAGE_KEY = 'herhealth_doctor_registration_draft'
+
+function isRegisteredDoctor(value: unknown): value is RegisteredDoctor {
+  if (!value || typeof value !== 'object') return false
+  const data = value as Record<string, unknown>
+  return typeof data.id === 'string' && !!data.registration && typeof data.registration === 'object' && !!data.profile && typeof data.profile === 'object' && data.verification === 'verified' && typeof data.createdAt === 'string'
+}
+
+export function getRegisteredDoctor(): RegisteredDoctor | null {
+  return readJson(DOCTOR_PROFILE_STORAGE_KEY, null, (value): value is RegisteredDoctor => value === null || isRegisteredDoctor(value))
+}
+
+export function saveRegisteredDoctor(doctor: RegisteredDoctor): void {
+  writeJson(DOCTOR_PROFILE_STORAGE_KEY, doctor)
+}
+
+export function getDoctorSession(): boolean {
+  try {
+    return window.localStorage.getItem(DOCTOR_SESSION_STORAGE_KEY) === 'active'
+  } catch {
+    return false
+  }
+}
+
+export function saveDoctorSession(active: boolean): void {
+  try {
+    if (active) window.localStorage.setItem(DOCTOR_SESSION_STORAGE_KEY, 'active')
+    else window.localStorage.removeItem(DOCTOR_SESSION_STORAGE_KEY)
+  } catch {
+    return
+  }
+}
+
+export function getDoctorDraft(): Partial<RegisteredDoctor> | null {
+  return readJson(DOCTOR_DRAFT_STORAGE_KEY, null, (value): value is Partial<RegisteredDoctor> | null => value === null || (!!value && typeof value === 'object'))
+}
+
+export function saveDoctorDraft(draft: Partial<RegisteredDoctor>): void {
+  writeJson(DOCTOR_DRAFT_STORAGE_KEY, draft)
+}

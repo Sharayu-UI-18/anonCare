@@ -5,7 +5,7 @@ import Button from '../components/Button'
 import Card from '../components/Card'
 import PageHeader from '../components/PageHeader'
 import { getAppointments, getMessages, saveMessages, type ChatMessage } from '../services/localStorage'
-import { DEMO_DOCTORS } from './Doctors'
+import { DEMO_DOCTORS } from '../services/doctorData'
 
 export default function Consultation() {
   const { appointmentId } = useParams()
