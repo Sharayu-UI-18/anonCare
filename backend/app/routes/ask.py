@@ -1,3 +1,4 @@
+
 import httpx
 from fastapi import APIRouter, HTTPException
 
@@ -26,23 +27,28 @@ def _format_context(documents: list[dict[str, str]]) -> str:
 @router.post("/api/ask", response_model=AskResponse)
 async def ask_question(request: AskRequest) -> AskResponse:
     question = request.question.strip()
+
     if not question:
-        raise HTTPException(status_code=422, detail="Question must not be blank.")
+        raise HTTPException(
+            status_code=422,
+            detail="Question must not be blank.",
+        )
 
     if is_emergency(question):
-    	return AskResponse(
-        	answer=EMERGENCY_ANSWER,
-        	sources=[],
-        	disclaimer=DISCLAIMER,
-        	should_consult_doctor=True,
-        	urgent=True,
-    	)        
+        return AskResponse(
+            answer=EMERGENCY_ANSWER,
+            sources=[],
+            disclaimer=DISCLAIMER,
+            should_consult_doctor=True,
+            urgent=True,
+        )
 
     documents = retrieve(question)
     sources = [
         Source(title=document["title"], url=document["url"])
         for document in documents
     ]
+
     if not documents:
         return AskResponse(
             answer=UNCERTAINTY_ANSWER,
@@ -52,8 +58,13 @@ async def ask_question(request: AskRequest) -> AskResponse:
         )
 
     context = _format_context(documents)
+
     try:
-        generated_answer = await generate_answer(question, context)
+        generated_answer = await generate_answer(
+            question,
+            context,
+            language=request.language,
+        )
     except (httpx.HTTPError, KeyError, ValueError) as error:
         raise HTTPException(
             status_code=502,
@@ -81,5 +92,5 @@ async def ask_question(request: AskRequest) -> AskResponse:
             is_unsafe_generated_answer(generated_answer or "")
             or should_consult_doctor(question, generated_answer or "")
         ),
-	urgent=False,
+        urgent=False,
     )

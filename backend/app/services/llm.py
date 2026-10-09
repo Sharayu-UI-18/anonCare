@@ -1,3 +1,4 @@
+
 import os
 
 from google import genai
@@ -17,7 +18,12 @@ Keep answers concise.
 """
 
 
-async def generate_answer(question: str, context: str) -> str:
+async def generate_answer(
+        
+    question: str,
+    context: str,
+    language: str = "English",
+) -> str:
     api_key = os.getenv("GEMINI_API_KEY")
 
     if not api_key:
@@ -27,15 +33,28 @@ async def generate_answer(question: str, context: str) -> str:
 
     try:
         client = genai.Client(api_key=api_key)
+        print("SELECTED LANGUAGE:", language)
 
-        prompt = f"""Trusted medical context:
+        prompt = f"""Response language: {language}
+
+IMPORTANT LANGUAGE INSTRUCTION:
+Write the entire answer in {language}.
+If the question is in another language, still answer in {language}.
+For Hindi, use natural Hindi in Devanagari script.
+For Marathi, use natural Marathi in Devanagari script.
+Keep medical terms understandable and explain them simply when needed.
+Do not change the language of source URLs or invent translated source titles.
+
+Trusted medical context:
 
 {context}
 
 User question:
 {question}
 
-Answer the user's question using only the trusted medical context above.
+Answer using only the trusted medical context above.
+Do not diagnose or prescribe. If the context is insufficient, say so
+in {language}.
 """
 
         response = await client.aio.models.generate_content(
