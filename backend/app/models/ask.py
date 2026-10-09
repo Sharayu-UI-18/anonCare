@@ -15,8 +15,14 @@ class PersonalContext(BaseModel):
     mood_trend: Literal["low", "mixed", "positive", "unknown"] = "unknown"
 
 
+class ChatTurn(BaseModel):
+    role: Literal["user", "assistant"]
+    content: str = Field(max_length=2000)
+
+
 class AskRequest(BaseModel):
     question: str = Field(min_length=1, max_length=1000)
+    history: list[ChatTurn] = Field(default_factory=list, max_length=50)
     anonymous: bool = True
     context: PersonalContext | None = None
 
