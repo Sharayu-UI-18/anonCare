@@ -32,7 +32,12 @@ def test_health_endpoint() -> None:
 
 
 def test_ask_returns_grounded_fallback_without_llm(monkeypatch) -> None:
-    async def no_llm(question: str, context: str) -> None:
+    async def no_llm(
+        question: str,
+        context: str,
+        language: str = "English",
+        history: list | None = None,
+    ) -> None:
         assert "late" in context.lower()
         return None
 
@@ -91,7 +96,12 @@ def test_blank_question_is_rejected() -> None:
 
 
 def test_unsafe_llm_output_is_replaced(monkeypatch) -> None:
-    async def unsafe_answer(question: str, context: str) -> str:
+    async def unsafe_answer(
+        question: str,
+        context: str,
+        language: str = "English",
+        history: list | None = None,
+    ) -> str:
         return "You may have anemia. Take 500 mg of medicine."
 
     monkeypatch.setattr(ask, "generate_answer", unsafe_answer)
@@ -107,7 +117,12 @@ def test_unsafe_llm_output_is_replaced(monkeypatch) -> None:
 
 
 def test_tracking_data_is_not_forwarded_to_llm(monkeypatch) -> None:
-    async def no_llm(question: str, context: str) -> None:
+    async def no_llm(
+        question: str,
+        context: str,
+        language: str = "English",
+        history: list | None = None,
+    ) -> None:
         assert question == "Why is my period late?"
         assert "sleep" not in context.lower()
         assert "mood" not in context.lower()
@@ -128,7 +143,12 @@ def test_tracking_data_is_not_forwarded_to_llm(monkeypatch) -> None:
 
 
 def test_medication_recommendation_is_replaced(monkeypatch) -> None:
-    async def medication_answer(question: str, context: str) -> str:
+    async def medication_answer(
+        question: str,
+        context: str,
+        language: str = "English",
+        history: list | None = None,
+    ) -> str:
         return "Take ibuprofen for the pain."
 
     monkeypatch.setattr(ask, "generate_answer", medication_answer)

@@ -1,7 +1,8 @@
 
 import httpx
 from fastapi import APIRouter, HTTPException
-
+from app.services.classifier import QueryCategory, classify_query
+from app.services.intent_classifier import classify_intent
 from app.models.ask import AskRequest, AskResponse, Source
 from app.services.llm import generate_answer
 from app.services.retrieval import retrieve
@@ -15,7 +16,19 @@ from app.services.safety import (
 )
 
 router = APIRouter()
+MEDICAL_ATTENTION_ANSWER = (
+    "Your concern may need advice from a healthcare professional. "
+    "Please use the existing Medical Help option to find appropriate support. "
+    "If your symptoms are severe or rapidly worsening, seek urgent medical care."
+)
 
+EMOTIONAL_SUPPORT_ANSWER = (
+    "I'm sorry you're going through this. Your feelings matter, and you "
+    "don't have to work through everything alone. If you're comfortable, "
+    "you can share a little more about what's troubling you. "
+    "If you feel unsafe or might harm yourself, contact emergency services "
+    "or someone you trust who can help you right now."
+)
 
 def _format_context(documents: list[dict[str, str]]) -> str:
     return "\n\n".join(
@@ -43,7 +56,44 @@ async def ask_question(request: AskRequest) -> AskResponse:
             should_consult_doctor=True,
             urgent=True,
         )
+    # Classify intent, falling back to deterministic rules if Gemini fails.
+    try:
+        intent = await classify_intent(question)
+        category = QueryCategory(intent["primary_category"])
+        urgency = intent["urgency"]
+    except Exception:
+        category = classify_query(question)
+        urgency = "routine"
 
+    # Emergency classification takes priority over other intents.
+    if urgency == "emergency":
+        return AskResponse(
+            answer=EMERGENCY_ANSWER,
+            sources=[],
+            disclaimer=DISCLAIMER,
+            should_consult_doctor=True,
+            urgent=True,
+        )
+
+    # Route medical concerns to the existing Medical Help option.
+    if category == QueryCategory.MEDICAL_ATTENTION:
+        return AskResponse(
+            answer=MEDICAL_ATTENTION_ANSWER,
+            sources=[],
+            disclaimer=DISCLAIMER,
+            should_consult_doctor=True,
+            urgent=(urgency == "urgent"),
+        )
+
+    # Handle emotional-support requests without generating medical advice.
+    if category == QueryCategory.EMOTIONAL_SUPPORT:
+        return AskResponse(
+            answer=EMOTIONAL_SUPPORT_ANSWER,
+            sources=[],
+            disclaimer=DISCLAIMER,
+            should_consult_doctor=False,
+            urgent=False,
+        )
     documents = retrieve(question)
     sources = [
         Source(title=document["title"], url=document["url"])
