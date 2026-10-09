@@ -6,6 +6,10 @@ import AskAI from './pages/AskAI'
 import CycleTracker from './pages/CycleTracker'
 import Dashboard from './pages/Dashboard'
 import Doctors from './pages/Doctors'
+import Wallet from './pages/Wallet'
+import Appointments from './pages/Appointments'
+import Consultation from './pages/Consultation'
+import MedicalRecords from './pages/MedicalRecords'
 import Insights from './pages/Insights'
 import Landing from './pages/Landing'
 import Onboarding from './pages/Onboarding'
@@ -13,7 +17,7 @@ import Privacy from './pages/Privacy'
 import Wellness from './pages/Wellness'
 
 function AppLayout() {
-  return <div className="app-layout"><Sidebar /><div className="app-body"><Navbar /><main className="main-content"><Routes><Route path="/dashboard" element={<Dashboard />} /><Route path="/cycle" element={<CycleTracker />} /><Route path="/wellness" element={<Wellness />} /><Route path="/insights" element={<Insights />} /><Route path="/ask-ai" element={<AskAI />} /><Route path="/doctors" element={<Doctors />} /><Route path="/privacy" element={<Privacy />} /></Routes></main></div></div>
+  return <div className="app-layout"><Sidebar /><div className="app-body"><Navbar /><main className="main-content"><Routes><Route path="/dashboard" element={<Dashboard />} /><Route path="/cycle" element={<CycleTracker />} /><Route path="/wellness" element={<Wellness />} /><Route path="/insights" element={<Insights />} /><Route path="/ask-ai" element={<AskAI />} /><Route path="/doctors" element={<Doctors />} /><Route path="/wallet" element={<Wallet />} /><Route path="/appointments" element={<Appointments />} /><Route path="/consultation/:appointmentId" element={<Consultation />} /><Route path="/medical-records" element={<MedicalRecords />} /><Route path="/privacy" element={<Privacy />} /></Routes></main></div></div>
 }
 
 function App() {

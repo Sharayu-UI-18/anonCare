@@ -275,3 +275,166 @@ export function getRecordsForPeriod(records: WellnessRecord[], period: WellnessP
   const endKey = today.toISOString().slice(0, 10)
   return records.filter((record) => record.date >= startKey && record.date <= endKey)
 }
+
+export type ConsultationType = 'chat' | 'video'
+export type WalletTransactionType = 'purchase' | 'booking' | 'refund'
+export type AppointmentStatus = 'upcoming' | 'completed' | 'cancelled'
+export type MedicalDocumentCategory = 'laboratory' | 'prescription' | 'other'
+
+export interface WalletTransaction {
+  id: string
+  date: string
+  amount: number
+  coins: number
+  type: WalletTransactionType
+  description: string
+}
+
+export interface WalletData {
+  balance: number
+  transactions: WalletTransaction[]
+}
+
+export interface Appointment {
+  id: string
+  doctorId: string
+  doctorName: string
+  date: string
+  time: string
+  consultationType: ConsultationType
+  duration: number
+  coins: number
+  status: AppointmentStatus
+  createdAt: string
+}
+
+export interface ChatMessage {
+  id: string
+  sender: 'patient' | 'doctor'
+  text: string
+  timestamp: string
+  attachmentName?: string
+}
+
+export interface MedicalDocument {
+  id: string
+  name: string
+  type: string
+  category: MedicalDocumentCategory
+  uploadedAt: string
+  appointmentId?: string
+  sample?: boolean
+  dataUrl?: string
+}
+
+const WALLET_STORAGE_KEY = 'herhealth_wallet'
+const APPOINTMENTS_STORAGE_KEY = 'herhealth_appointments'
+const CHAT_STORAGE_KEY = 'herhealth_consultation_messages'
+const RECORDS_STORAGE_KEY = 'herhealth_medical_documents'
+
+function readJson<T>(key: string, fallback: T, guard: (value: unknown) => value is T): T {
+  try {
+    const raw = window.localStorage.getItem(key)
+    if (!raw) return fallback
+    const parsed: unknown = JSON.parse(raw)
+    return guard(parsed) ? parsed : fallback
+  } catch {
+    return fallback
+  }
+}
+
+function writeJson<T>(key: string, value: T): void {
+  try {
+    window.localStorage.setItem(key, JSON.stringify(value))
+  } catch {
+    throw new Error('This browser could not save the demo data. Please free some local storage and try again.')
+  }
+}
+
+function isWalletData(value: unknown): value is WalletData {
+  if (!value || typeof value !== 'object') return false
+  const data = value as Record<string, unknown>
+  return typeof data.balance === 'number' && data.balance >= 0 && Array.isArray(data.transactions)
+}
+
+function isAppointmentList(value: unknown): value is Appointment[] {
+  return Array.isArray(value) && value.every((item) => {
+    if (!item || typeof item !== 'object') return false
+    const data = item as Record<string, unknown>
+    return typeof data.id === 'string' && typeof data.doctorId === 'string' && typeof data.doctorName === 'string' && typeof data.date === 'string' && typeof data.time === 'string' && (data.consultationType === 'chat' || data.consultationType === 'video') && typeof data.coins === 'number' && typeof data.status === 'string'
+  })
+}
+
+function isMessageMap(value: unknown): value is Record<string, ChatMessage[]> {
+  return !!value && typeof value === 'object' && Object.values(value as Record<string, unknown>).every((messages) => Array.isArray(messages))
+}
+
+function isDocumentList(value: unknown): value is MedicalDocument[] {
+  return Array.isArray(value) && value.every((item) => !!item && typeof item === 'object' && typeof (item as Record<string, unknown>).id === 'string' && typeof (item as Record<string, unknown>).name === 'string')
+}
+
+export function getWallet(): WalletData {
+  return readJson(WALLET_STORAGE_KEY, { balance: 250, transactions: [] }, isWalletData)
+}
+
+export function saveWallet(wallet: WalletData): void {
+  writeJson(WALLET_STORAGE_KEY, wallet)
+}
+
+export function addWalletTransaction(transaction: Omit<WalletTransaction, 'id' | 'date'> & Partial<Pick<WalletTransaction, 'id' | 'date'>>): WalletData {
+  const wallet = getWallet()
+  const savedTransaction: WalletTransaction = { ...transaction, id: transaction.id ?? `wallet-${Date.now()}`, date: transaction.date ?? new Date().toISOString() }
+  const next = { balance: wallet.balance + savedTransaction.coins, transactions: [savedTransaction, ...wallet.transactions] }
+  saveWallet(next)
+  return next
+}
+
+export function spendWalletCoins(coins: number, description: string): WalletData | null {
+  const wallet = getWallet()
+  if (coins <= 0 || wallet.balance < coins) return null
+  const transaction: WalletTransaction = { id: `wallet-${Date.now()}`, date: new Date().toISOString(), amount: 0, coins: -coins, type: 'booking', description }
+  const next = { balance: wallet.balance - coins, transactions: [transaction, ...wallet.transactions] }
+  saveWallet(next)
+  return next
+}
+
+export function getAppointments(): Appointment[] {
+  return readJson(APPOINTMENTS_STORAGE_KEY, [], isAppointmentList)
+}
+
+export function saveAppointment(appointment: Appointment): Appointment[] {
+  const next = [appointment, ...getAppointments().filter((item) => item.id !== appointment.id)]
+  writeJson(APPOINTMENTS_STORAGE_KEY, next)
+  return next
+}
+
+export function updateAppointment(id: string, changes: Partial<Appointment>): Appointment[] {
+  const next = getAppointments().map((item) => item.id === id ? { ...item, ...changes } : item)
+  writeJson(APPOINTMENTS_STORAGE_KEY, next)
+  return next
+}
+
+export function getMessages(appointmentId: string): ChatMessage[] {
+  return readJson(CHAT_STORAGE_KEY, {}, isMessageMap)[appointmentId] ?? []
+}
+
+export function saveMessages(appointmentId: string, messages: ChatMessage[]): void {
+  const allMessages = readJson(CHAT_STORAGE_KEY, {}, isMessageMap)
+  writeJson(CHAT_STORAGE_KEY, { ...allMessages, [appointmentId]: messages })
+}
+
+export function getMedicalDocuments(): MedicalDocument[] {
+  return readJson(RECORDS_STORAGE_KEY, [], isDocumentList)
+}
+
+export function saveMedicalDocument(document: MedicalDocument): MedicalDocument[] {
+  const next = [document, ...getMedicalDocuments().filter((item) => item.id !== document.id)]
+  writeJson(RECORDS_STORAGE_KEY, next)
+  return next
+}
+
+export function deleteMedicalDocument(id: string): MedicalDocument[] {
+  const next = getMedicalDocuments().filter((item) => item.id !== id)
+  writeJson(RECORDS_STORAGE_KEY, next)
+  return next
+}
