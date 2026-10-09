@@ -1,9 +1,27 @@
+import pytest
 from fastapi.testclient import TestClient
 
 from app.main import app
 from app.routes import ask
+from app.services.retrieval import retrieve
 
 client = TestClient(app)
+
+
+@pytest.mark.parametrize(
+    ("question", "source_title"),
+    [
+        ("What contraception options can prevent pregnancy?", "NHS: Methods of contraception"),
+        ("Could my painful periods be endometriosis?", "NHS: Endometriosis"),
+        ("Are hot flushes a symptom of menopause?", "NHS: Menopause and perimenopause symptoms"),
+        ("When should I seek help if I cannot conceive?", "NHS: Infertility"),
+        ("Where can I get tested for sexually transmitted infections?", "NHS: STI testing and treatment"),
+    ],
+)
+def test_retrieval_finds_added_health_topics(question: str, source_title: str) -> None:
+    documents = retrieve(question)
+
+    assert source_title in {document["title"] for document in documents}
 
 
 def test_health_endpoint() -> None:
