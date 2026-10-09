@@ -1,7 +1,15 @@
 
-# 🌸 HerHealth
+# ❀˖° HerHealth
 
 ### A Smarter Way to Access Women's Healthcare
+
+## 🚀 Live Demo
+
+**Live Application:** [https://your-frontend-url.vercel.app](https://anon-care-ej1c.vercel.app)
+
+**Backend API:** [https://your-backend-url.vercel.app](https://anon-care-omega.vercel.app/)
+
+**API Documentation:** [https://your-backend-url.vercel.app/docs](https://anon-care-omega.vercel.app/docs)
 
 > **Your health. Your privacy. Your choice.**
 

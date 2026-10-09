@@ -34,6 +34,7 @@ async def ask_question(request: AskRequest) -> AskResponse:
             detail="Question must not be blank.",
         )
 
+    # Handle emergencies before retrieval or AI generation.
     if is_emergency(question):
         return AskResponse(
             answer=EMERGENCY_ANSWER,
@@ -58,12 +59,14 @@ async def ask_question(request: AskRequest) -> AskResponse:
         )
 
     context = _format_context(documents)
+    history = [turn.model_dump() for turn in request.history]
 
     try:
         generated_answer = await generate_answer(
             question,
             context,
             language=request.language,
+            history=history,
         )
     except (httpx.HTTPError, KeyError, ValueError) as error:
         raise HTTPException(

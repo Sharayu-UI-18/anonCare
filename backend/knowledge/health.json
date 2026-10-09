@@ -46,5 +46,35 @@
     "url": "https://www.nhs.uk/womens-health/",
     "keywords": "womens health periods reproductive health contraception pregnancy menstrual health health",
     "content": "Women's health includes areas such as menstrual health, reproductive health, pregnancy and contraception. Symptoms that are persistent, severe, unusual for you or affecting daily life may need assessment from a healthcare professional."
+  },
+  {
+    "title": "NHS: Methods of contraception",
+    "url": "https://www.nhs.uk/contraception/methods-of-contraception/",
+    "keywords": "contraception birth control pregnancy prevention condom pill implant coil IUD IUS hormonal emergency",
+    "content": "There are several types of contraception, including condoms, hormonal methods, intrauterine devices and systems, and emergency contraception. Methods differ in how they are used and how well they prevent pregnancy. Condoms also help reduce the risk of sexually transmitted infections; other contraception methods do not protect against STIs. A healthcare professional can help discuss suitable options."
+  },
+  {
+    "title": "NHS: Endometriosis",
+    "url": "https://www.nhs.uk/conditions/endometriosis/",
+    "keywords": "endometriosis womb lining tissue period pain pelvic pain heavy bleeding sex fertility symptoms",
+    "content": "Endometriosis is a condition where tissue similar to the lining of the womb grows in other places, such as the ovaries or fallopian tubes. Symptoms can include severe period pain, pelvic pain, heavy periods, pain during or after sex, and difficulty getting pregnant, but they vary and some people have no symptoms. If symptoms affect daily life or you are concerned, speak to a healthcare professional; symptoms alone cannot confirm a diagnosis."
+  },
+  {
+    "title": "NHS: Menopause and perimenopause symptoms",
+    "url": "https://www.nhs.uk/conditions/menopause-and-perimenopause/symptoms/",
+    "keywords": "menopause perimenopause hot flushes night sweats periods sleep mood anxiety symptoms",
+    "content": "Menopause and perimenopause symptoms vary. They can include changes to periods, hot flushes, night sweats, difficulty sleeping, and changes in mood. Symptoms may affect daily life, and a GP can discuss support and treatment options."
+  },
+  {
+    "title": "NHS: Infertility",
+    "url": "https://www.nhs.uk/conditions/infertility/diagnosis/",
+    "keywords": "fertility infertility conceive conception trying pregnant pregnancy difficulty seek help year age",
+    "content": "Fertility difficulties can affect either partner, so assessment may involve both. If you have not conceived after a year of trying, speak to a GP; seek advice sooner if you are 36 or over or have a known reason to be concerned about fertility. A healthcare professional can discuss possible causes and appropriate tests."
+  },
+  {
+    "title": "NHS: STI testing and treatment",
+    "url": "https://www.nhs.uk/nhs-services/sexual-health-services/find-sti-testing-and-treatment/",
+    "keywords": "sexual health sexually transmitted infection STI test testing treatment clinic screening chlamydia gonorrhoea",
+    "content": "NHS sexual health services can provide information, STI testing and treatment. Some infections do not cause noticeable symptoms, so testing may be appropriate after possible exposure or if you are concerned. Services and testing options vary by area; use the NHS service finder or contact a local sexual health service for advice."
   }
 ]
