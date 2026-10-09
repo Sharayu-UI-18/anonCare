@@ -1,9 +1,11 @@
+import type { PersonalContext } from './personalContext'
 
 export type HealthLanguage = 'English' | 'Hindi' | 'Marathi'
 
 export interface AskRequest {
   question: string
   language?: HealthLanguage
+  context?: PersonalContext
 }
 
 export interface AskSource {

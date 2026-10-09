@@ -4,6 +4,7 @@ from fastapi import APIRouter, HTTPException
 from app.services.classifier import QueryCategory, classify_query
 from app.services.intent_classifier import classify_intent
 from app.models.ask import AskRequest, AskResponse, Source
+from app.services.privacy import describe_context, redact_identifiers
 from app.services.llm import generate_answer
 from app.services.retrieval import retrieve
 from app.services.safety import (
@@ -39,8 +40,7 @@ def _format_context(documents: list[dict[str, str]]) -> str:
 
 @router.post("/api/ask", response_model=AskResponse)
 async def ask_question(request: AskRequest) -> AskResponse:
-    question = request.question.strip()
-
+    question = redact_identifiers(request.question.strip())
     if not question:
         raise HTTPException(
             status_code=422,
@@ -112,11 +112,17 @@ async def ask_question(request: AskRequest) -> AskResponse:
     history = [turn.model_dump() for turn in request.history]
 
     try:
+        personal_context = describe_context(request.context)
+        answer_options = {
+            "language": request.language,
+            "history": history,
+        }
+        if personal_context:
+            answer_options["personal_context"] = personal_context
         generated_answer = await generate_answer(
             question,
             context,
-            language=request.language,
-            history=history,
+            **answer_options,
         )
     except (httpx.HTTPError, KeyError, ValueError) as error:
         raise HTTPException(

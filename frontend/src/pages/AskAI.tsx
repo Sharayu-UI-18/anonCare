@@ -9,6 +9,11 @@ import {
   type AskResponse,
   type HealthLanguage,
 } from '../services/api'
+import {
+  buildPersonalContext,
+  getContextOptIn,
+  setContextOptIn,
+} from '../services/personalContext'
 
 const UI_TEXT = {
   English: {
@@ -23,7 +28,7 @@ const UI_TEXT = {
     pageEyebrow: 'Private guidance',
     pageTitle: 'Ask anonymously',
     pageDescription:
-      'Get general health information grounded in trusted sources. Your tracking history is never sent with your question.',
+      'Get general health information grounded in trusted sources. Tracking details stay on this device unless you opt in to share a coarse summary.',
     questionHeading: 'What is on your mind?',
     questionDescription:
       'Share a question in your own words. Don’t include your name or other identifying details.',
@@ -32,6 +37,10 @@ const UI_TEXT = {
     placeholder: 'e.g. What can cause changes in my cycle?',
     privacy:
       'Only your question and selected response language are sent to the health assistant. Cycle, wellness, and other tracking data stay on this device.',
+    personalize:
+      'Personalize with a general summary (e.g. cycle phase, this week’s average sleep, energy and mood). No dates, notes, or raw logs are shared.',
+    privacyWithContext:
+      'Your question and a coarse summary derived on this device are sent. Identifiers like emails, phone numbers, and your anonymous ID are removed.',
     loading: 'Getting information…',
     submit: 'Ask anonymously',
     error:
@@ -49,7 +58,7 @@ const UI_TEXT = {
     pageEyebrow: 'निजी स्वास्थ्य मार्गदर्शन',
     pageTitle: 'गुमनाम रूप से पूछें',
     pageDescription:
-      'विश्वसनीय स्रोतों पर आधारित सामान्य स्वास्थ्य जानकारी प्राप्त करें। आपके ट्रैकिंग इतिहास को आपके प्रश्न के साथ नहीं भेजा जाता।',
+      'विश्वसनीय स्रोतों पर आधारित सामान्य स्वास्थ्य जानकारी प्राप्त करें। आपकी अनुमति के बिना ट्रैकिंग की जानकारी नहीं भेजी जाती।',
     questionHeading: 'आप क्या जानना चाहती हैं?',
     questionDescription:
       'अपने शब्दों में प्रश्न पूछें। अपना नाम या पहचान बताने वाली जानकारी साझा न करें।',
@@ -58,6 +67,10 @@ const UI_TEXT = {
     placeholder: 'उदाहरण: मेरे मासिक धर्म चक्र में बदलाव क्यों हो सकते हैं?',
     privacy:
       'केवल आपका प्रश्न और चुनी गई उत्तर की भाषा स्वास्थ्य सहायक को भेजी जाती है। मासिक धर्म, स्वास्थ्य और अन्य ट्रैकिंग डेटा इसी डिवाइस पर रहता है।',
+    personalize:
+      'सामान्य सारांश के साथ जवाब को उपयोगी बनाएँ (जैसे चक्र का चरण, इस सप्ताह की औसत नींद, ऊर्जा और मनोदशा)। तारीखें, नोट्स या असली रिकॉर्ड साझा नहीं किए जाते।',
+    privacyWithContext:
+      'आपका प्रश्न और इसी डिवाइस पर बनाया गया सामान्य सारांश भेजा जाता है। ईमेल, फ़ोन नंबर और गुमनाम आईडी जैसी पहचान संबंधी जानकारी हटा दी जाती है।',
     loading: 'जानकारी प्राप्त की जा रही है…',
     submit: 'गुमनाम रूप से पूछें',
     error:
@@ -75,7 +88,7 @@ const UI_TEXT = {
     pageEyebrow: 'खाजगी आरोग्य मार्गदर्शन',
     pageTitle: 'निनावीपणे प्रश्न विचारा',
     pageDescription:
-      'विश्वसनीय स्रोतांवर आधारित सामान्य आरोग्य माहिती मिळवा. तुमचा ट्रॅकिंग इतिहास प्रश्नासोबत पाठवला जात नाही.',
+      'विश्वसनीय स्रोतांवर आधारित सामान्य आरोग्य माहिती मिळवा. तुमच्या संमतीशिवाय ट्रॅकिंगची माहिती पाठवली जात नाही.',
     questionHeading: 'तुम्हाला काय जाणून घ्यायचे आहे?',
     questionDescription:
       'तुमचा प्रश्न स्वतःच्या शब्दांत विचारा. तुमचे नाव किंवा ओळख पटवणारी माहिती देऊ नका.',
@@ -84,6 +97,10 @@ const UI_TEXT = {
     placeholder: 'उदा. माझ्या मासिक पाळीच्या चक्रात बदल का होऊ शकतात?',
     privacy:
       'फक्त तुमचा प्रश्न आणि निवडलेली उत्तराची भाषा आरोग्य सहाय्यकाकडे पाठवली जाते. मासिक पाळी, आरोग्य आणि इतर ट्रॅकिंग डेटा याच डिव्हाइसवर राहतो.',
+    personalize:
+      'सामान्य सारांशासह उत्तर वैयक्तिक करा (उदा. चक्राचा टप्पा, या आठवड्यातील सरासरी झोप, ऊर्जा आणि मनःस्थिती). तारखा, नोंदी किंवा मूळ माहिती शेअर केली जात नाही.',
+    privacyWithContext:
+      'तुमचा प्रश्न आणि या डिव्हाइसवर तयार केलेला सामान्य सारांश पाठवला जातो. ईमेल, फोन नंबर आणि निनावी आयडी यांसारखी ओळख पटवणारी माहिती काढून टाकली जाते.',
     loading: 'माहिती मिळवत आहे…',
     submit: 'निनावीपणे प्रश्न विचारा',
     error:
@@ -96,6 +113,7 @@ export default function AskAI() {
   const [language, setLanguage] = useState<HealthLanguage>('English')
   const [answer, setAnswer] = useState<AskResponse | null>(null)
   const [error, setError] = useState('')
+  const [shareContext, setShareContext] = useState(getContextOptIn)
   const [isLoading, setIsLoading] = useState(false)
 
   const ui = UI_TEXT[language]
@@ -114,6 +132,7 @@ export default function AskAI() {
         await askHealthQuestion({
           question: trimmedQuestion,
           language,
+          ...(shareContext ? { context: buildPersonalContext() } : {}),
         })
       )
     } catch {
@@ -167,15 +186,25 @@ export default function AskAI() {
               placeholder={ui.placeholder}
             />
           </label>
-
-          <p className="privacy-note">{ui.privacy}</p>
-
+          <label className="field-checkbox">
+            <input
+              type="checkbox"
+              checked={shareContext}
+              onChange={(event) => {
+                setShareContext(event.target.checked)
+                setContextOptIn(event.target.checked)
+              }}
+            />
+            <span>{ui.personalize}</span>
+          </label>
+          <p className="privacy-note">
+            {shareContext ? ui.privacyWithContext : ui.privacy}
+          </p>
           {error && (
             <p className="form-error" role="alert">
               {error}
             </p>
           )}
-
           <Button type="submit" disabled={isLoading || !question.trim()}>
             <Send size={16} />
             {isLoading ? ui.loading : ui.submit}

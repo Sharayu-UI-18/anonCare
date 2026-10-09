@@ -161,3 +161,14 @@ def test_medication_recommendation_is_replaced(monkeypatch) -> None:
     body = response.json()
     assert "ibuprofen" not in body["answer"]
     assert body["should_consult_doctor"] is True
+
+
+def test_privacy_helpers():
+    from app.models.ask import PersonalContext
+    from app.services.privacy import describe_context, redact_identifiers
+
+    text = redact_identifiers("I am HH-ABC2345, mail a@b.com or call +1 555 123 4567")
+    assert "HH-" not in text and "@" not in text and "555" not in text
+    described = describe_context(PersonalContext(cycle_day=24, sleep_level="low"))
+    assert "day 24" in described and "low sleep" in described
+    assert describe_context(None) == ""

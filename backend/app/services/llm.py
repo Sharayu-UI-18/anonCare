@@ -77,6 +77,7 @@ async def generate_answer(
     context: str,
     language: str = "English",
     history: list[dict[str, str]] | None = None,
+    personal_context: str = "",
 ) -> str:
     api_key = os.getenv("GEMINI_API_KEY")
 
@@ -108,11 +109,12 @@ IMPORTANT LANGUAGE INSTRUCTION:
 Trusted medical context:
 {context}
 
-{history_block}Current user question:
+{history_block}{personal_context}Current user question:
 {question}
 
 Answer using only the trusted medical context for medical facts.
 Use earlier conversation only to understand follow-up questions.
+Use general user context only to tailor tone and relevance, never to diagnose.
 Do not diagnose, prescribe, or recommend medication dosages.
 If the context is insufficient, say so in {language}.
 Follow the answer format when appropriate, and ask a brief clarifying
