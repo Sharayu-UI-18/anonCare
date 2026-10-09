@@ -76,5 +76,89 @@
     "url": "https://www.nhs.uk/nhs-services/sexual-health-services/find-sti-testing-and-treatment/",
     "keywords": "sexual health sexually transmitted infection STI test testing treatment clinic screening chlamydia gonorrhoea",
     "content": "NHS sexual health services can provide information, STI testing and treatment. Some infections do not cause noticeable symptoms, so testing may be appropriate after possible exposure or if you are concerned. Services and testing options vary by area; use the NHS service finder or contact a local sexual health service for advice."
+  },
+  {
+    "title": "PMDD",
+    "url": "https://www.uhc.com/news-articles/healthy-living/pmdd",
+    "keywords": "PMDD, premenstrual dysphoric disorder, PMS, premenstrual syndrome, ovulation, hormone levels, serotonin, irritability, depression, anxiety, panic attacks, mood swings, bloating, breast tenderness, cramps, fatigue, sertraline, fluoxetine, paroxetine, SSRIs, antidepressants, birth control pills, meditation, yoga, lifestyle changes",
+    "content": "Premenstrual dysphoric disorder (PMDD) is a severe form of premenstrual syndrome (PMS) that can cause significant mood changes and physical symptoms in the luteal phase of the menstrual cycle. Symptoms may include irritability, depression, anxiety, panic attacks, mood swings, bloating, breast tenderness, cramps, and fatigue. Treatment options can include lifestyle changes, medication such as SSRIs, and birth control pills."
+  },
+  {
+    "title": "NHS: Heavy Periods",
+    "url": "https://www.nhs.uk/conditions/heavy-periods/",
+    "keywords": "heavy periods menorrhagia menstrual bleeding excessive bleeding periods",
+    "content": "Heavy periods, also known as menorrhagia, involve excessive menstrual bleeding that can interfere with daily life. Symptoms may include soaking through one or more sanitary pads or tampons every hour for several consecutive hours, needing to use double protection, or passing large blood clots. It's important to see a healthcare professional for assessment and management options."
+  },
+  {
+    "title": "Wellbeing of Women: Severe Period Pain",
+    "url": "https://www.wellbeingofwomen.org.uk/health-information/what-is-severe-period-pain/",
+    "keywords": "severe period pain dysmenorrhoea menstrual cramps abdominal pain",
+    "content": "Severe period pain, also known as dysmenorrhoea, involves intense menstrual cramps that can interfere with daily activities. It is important to seek medical advice if the pain is severe, persistent, or unusual for you."
+  },
+  {
+    "title": "WellBeingOfWomen: Fibroids",
+    "url": "https://www.wellbeingofwomen.org.uk/health-information/what-are-fibroids/",
+    "keywords": "fibroids uterine fibroids leiomyomas benign tumors menstrual bleeding pelvic pain",
+    "content": "Fibroids, also known as uterine fibroids or leiomyomas, are non-cancerous growths in the uterus that can cause symptoms such as heavy menstrual bleeding, pelvic pain, and pressure on the bladder or bowel. Treatment options vary depending on the size, location, and severity of symptoms and may include medication or surgical interventions."
+  },
+  {
+    "title": "Wellbeing of Women: Adenomyosis",
+    "url": "https://www.wellbeingofwomen.org.uk/health-information/what-is-adenomyosis/",
+    "keywords": "adenomyosis endometrial tissue uterine wall heavy menstrual bleeding pelvic pain",
+    "content": "Adenomyosis is a condition where the endometrial tissue grows into the muscular wall of the uterus, causing heavy menstrual bleeding and pelvic pain. Treatment options may include medication or surgical interventions depending on the severity of symptoms."
+  },
+  {
+    "title": "Wellbeing of Women: Endometriosis",
+    "url": "https://www.wellbeingofwomen.org.uk/health-information/what-is-endometriosis/",
+    "keywords": "endometriosis endometrial tissue pelvic pain heavy menstrual bleeding infertility",
+    "content": "Endometriosis is a condition where the tissue similar to the lining of the uterus grows outside the uterus, causing pelvic pain, heavy menstrual bleeding, and sometimes infertility. Treatment options may include medication or surgical interventions depending on the severity of symptoms."
+  },
+  {
+    "title": "NHS: Polyendocrine Metabolic Ovarian Syndrome (PMOS)",
+    "url": "https://www.nhs.uk/conditions/polyendocrine-metabolic-ovarian-syndrome-pmos/",
+    "keywords": "polyendocrine metabolic ovarian syndrome PMOS hormonal imbalance menstrual irregularities infertility",
+    "content": "Polyendocrine Metabolic Ovarian Syndrome (PMOS) is a rare hormonal disorder that affects the ovaries and other endocrine glands, leading to symptoms such as menstrual irregularities, infertility, and metabolic issues. Management may include lifestyle changes, medication, and regular monitoring by healthcare professionals."
+  },
+  {
+    "title": "Canberra Health Services: Period Impact and Pain Assessment (PIPPA)",
+    "url": "https://www.canberrahealthservices.act.gov.au/services-and-clinics/services/canberra-endometriosis-centre/period-impact-and-pain-assessment-pippa",
+    "keywords": "period impact pain assessment PIPPA endometriosis menstrual pain",
+    "content": "The Period Impact and Pain Assessment (PIPPA) is a service provided by the Canberra Endometriosis Centre to evaluate the impact of menstrual pain on daily life and to guide appropriate management and treatment options."
+  },
+  {
+    "title": "NHS Wales: Painful periods and pain relief",
+    "url": "https://111.wales.nhs.uk/periods,painful/?locale=en",
+    "keywords": "contacting healthcare providers painful periods menstrual pain cramps menstrual cycle endometriosis adenomyosis fibroids pelvic inflammatory disease IUD coil heat pad hormonal contraception",
+    "content": "Period pain is common before or during periods, usually lasting up to 3 days, and can often be eased at home with heat, gentle exercise, massage or painkillers like paracetamol or ibuprofen. It can also stem from conditions such as endometriosis, fibroids or pelvic inflammatory disease, so severe or worsening pain — or pain that disrupts daily life — warrants seeing a GP, who may suggest stronger anti-inflammatories, a TENS machine or hormonal contraception. For painful periods or menstrual pain, contacting healthcare providers is essential for proper diagnosis and management; NHS Wales provides guidance on seeking medical advice and support."
+  },
+  {
+    "title": "When to seek mental health support",
+    "url": "https://applications.emro.who.int/docs/WHOEMMNH231E-eng.pdf?_gl=1*756zse*_ga*MTg3NjkzOTk5OS4xNzkwMjY2NDY4*_ga_610FGB0GNK*czE3OTE1MjQ2NTQkbzEkZzAkdDE3OTE1MjQ2NTQkajYwJGwwJGgw",
+    "keywords": "mental health support, seeking help, mental health resources",
+    "content": "It is important to seek mental health support when experiencing persistent emotional distress, mood changes, or other mental health concerns. The WHO provides guidance on recognizing the need for support and accessing appropriate mental health resources."
+  },
+  {
+    "title": "Infections",
+    "url": "https://www.nj.gov/health/womenshealth/reproductive-health/periods-menstruation/toxic-shock-syndrome/",
+    "keywords": "toxic shock syndrome, TSS, Staphylococcus aureus, Streptococcus pyogenes, tampons, bacterial infection, toxins ,Secondary: super-absorbent tampons, menstrual cups, skin wounds, burns, surgery, high fever, low blood pressure, sunburn-like rash, organ dysfunction, antibiotics, prevention, treatment",
+    "content": "Toxic shock syndrome (TSS) is a rare but life-threatening condition caused by bacterial toxins, most often Staphylococcus aureus or Streptococcus pyogenes, leading to fever, rash, low blood pressure, and organ dysfunction. In menstruation, it's linked mainly to tampon use — especially super-absorbent tampons or those left in too long — which create conditions favoring bacterial growth, so changing tampons every 4–6 hours and using the lowest absorbency needed greatly reduces risk."
+  },
+  {
+    "title": "Iron deficiency and sources",
+    "url": "https://www.nhs.uk/conditions/vitamins-and-minerals/iron/",
+    "keywords": "Iron, red blood cells, oxygen, iron deficiency anaemia, menstrual period, heavy periods, 14.8mg, women aged 19–49, iron supplements, iron-rich foods",
+    "content": "Iron needs rise during the menstrual years: women aged 19–49 need 14.8mg daily — notably higher than the 8.7mg for men or women over 50 — because iron is lost through menstrual blood. Those with heavy periods are especially at risk of iron deficiency anaemia and may need supplements, so iron-rich foods (beans, nuts, dried fruit, fortified cereals, red meat) are particularly important."
+  },
+  {
+    "title": "Reason for periods",
+    "url": "https://www.nhsinform.scot/healthy-living/womens-health/girls-and-young-women-puberty-to-around-25/periods-and-menstrual-health/periods-and-pregnancy",
+    "keywords": "Periods, menstrual cycle, reasons for periods, menstrual health, puberty, pregnancy",
+    "content": "Periods occur as part of the menstrual cycle, which prepares the body for pregnancy. They are a sign that the reproductive system is functioning normally. Understanding the reasons for periods helps in managing menstrual health and recognizing any abnormalities."
+  },
+  {
+    "title": "Menstrual Cycle Information",
+    "url": "https://www.uhliverpool.nhs.uk/application/files/5716/9702/3853/Menstrual_Cycle_PIF_1054.pdf",
+    "keywords": "Menstrual cycle, periods, menstrual health, information leaflet",
+    "content": "This leaflet provides detailed information about the menstrual cycle, including the different phases, what is considered normal, and tips for managing menstrual health."
   }
 ]
