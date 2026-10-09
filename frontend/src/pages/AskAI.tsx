@@ -3,12 +3,14 @@ import { LockKeyhole, Send } from 'lucide-react'
 import Button from '../components/Button'
 import Card from '../components/Card'
 import PageHeader from '../components/PageHeader'
+import { buildPersonalContext, getContextOptIn, setContextOptIn } from '../services/personalContext'
 import { askHealthQuestion, type AskResponse } from '../services/api'
 
 export default function AskAI() {
   const [question, setQuestion] = useState('')
   const [answer, setAnswer] = useState<AskResponse | null>(null)
   const [error, setError] = useState('')
+  const [shareContext, setShareContext] = useState(getContextOptIn)
   const [isLoading, setIsLoading] = useState(false)
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -21,7 +23,7 @@ export default function AskAI() {
     setIsLoading(true)
 
     try {
-      setAnswer(await askHealthQuestion({ question: trimmedQuestion }))
+      setAnswer(await askHealthQuestion({ question: trimmedQuestion, ...(shareContext ? { context: buildPersonalContext() } : {}) }))
     } catch {
       setError("We couldn't connect to the health assistant right now. Please try again.")
     } finally {
@@ -31,7 +33,7 @@ export default function AskAI() {
 
   return (
     <>
-      <PageHeader eyebrow="Private guidance" title="Ask anonymously" description="Get general health information grounded in trusted sources. Your tracking history is never sent with your question." />
+      <PageHeader eyebrow="Private guidance" title="Ask anonymously" description="Get general health information grounded in trusted sources. Your tracking history is never sent. You can optionally share a coarse summary." />
       <Card>
         <div className="card-top">
           <div>
@@ -52,7 +54,15 @@ export default function AskAI() {
               placeholder="e.g. What can cause changes in my cycle?"
             />
           </label>
-          <p className="privacy-note">Only your question is sent to the health assistant. Cycle, wellness, and other tracking data stay on this device.</p>
+          <label className="field-checkbox">
+            <input
+              type="checkbox"
+              checked={shareContext}
+              onChange={(event) => { setShareContext(event.target.checked); setContextOptIn(event.target.checked) }}
+            />
+            <span>Personalize with a general summary (e.g. cycle phase, this week’s average sleep, energy and mood). No dates, notes, or raw logs are shared.</span>
+          </label>
+          <p className="privacy-note">{shareContext ? 'Your question plus a coarse summary derived on this device is sent. Identifiers like emails, phone numbers and your anonymous ID are removed.' : 'Only your question is sent to the health assistant. Cycle, wellness, and other tracking data stay on this device.'}</p>
           {error && <p className="form-error" role="alert">{error}</p>}
           <Button type="submit" disabled={isLoading || !question.trim()}>
             <Send size={16} />{isLoading ? 'Getting information…' : 'Ask anonymously'}

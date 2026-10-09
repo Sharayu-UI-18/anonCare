@@ -90,7 +90,8 @@ def format_history(history: list[dict[str, str]] | None) -> str:
 
 
 async def generate_answer(
-    question: str, context: str, history: list[dict[str, str]] | None = None
+    question: str, context: str, history: list[dict[str, str]] | None = None,
+    personal_context: str = "",
 ) -> str:
     api_key = os.getenv("GEMINI_API_KEY")
 
@@ -109,11 +110,12 @@ async def generate_answer(
 
 {context}
 
-{history_block}User question:
+{history_block}{personal_context}User question:
 {question}
 
 Answer the user's question using only the trusted medical context above.
 Follow the answer format, or ask a clarifying question if the question is ambiguous.
+If general user context is given, use it only to tailor tone and relevance, never to diagnose.
 """
 
         response = await client.aio.models.generate_content(
