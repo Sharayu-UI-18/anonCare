@@ -1,5 +1,8 @@
+import type { PersonalContext } from './personalContext'
+
 export interface AskRequest {
   question: string
+  context?: PersonalContext
 }
 
 export interface AskSource {

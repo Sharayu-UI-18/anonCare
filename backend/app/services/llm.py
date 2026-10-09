@@ -17,7 +17,7 @@ Keep answers concise.
 """
 
 
-async def generate_answer(question: str, context: str) -> str:
+async def generate_answer(question: str, context: str, personal_context: str = "") -> str:
     api_key = os.getenv("GEMINI_API_KEY")
 
     if not api_key:
@@ -32,10 +32,11 @@ async def generate_answer(question: str, context: str) -> str:
 
 {context}
 
-User question:
+{personal_context}User question:
 {question}
 
 Answer the user's question using only the trusted medical context above.
+If general user context is given, use it only to tailor tone and relevance, never to diagnose.
 """
 
         response = await client.aio.models.generate_content(

@@ -2,6 +2,7 @@ import httpx
 from fastapi import APIRouter, HTTPException
 
 from app.models.ask import AskRequest, AskResponse, Source
+from app.services.privacy import describe_context, redact_identifiers
 from app.services.llm import generate_answer
 from app.services.retrieval import retrieve
 from app.services.safety import (
@@ -25,7 +26,7 @@ def _format_context(documents: list[dict[str, str]]) -> str:
 
 @router.post("/api/ask", response_model=AskResponse)
 async def ask_question(request: AskRequest) -> AskResponse:
-    question = request.question.strip()
+    question = redact_identifiers(request.question.strip())
     if not question:
         raise HTTPException(status_code=422, detail="Question must not be blank.")
 
@@ -53,7 +54,12 @@ async def ask_question(request: AskRequest) -> AskResponse:
 
     context = _format_context(documents)
     try:
-        generated_answer = await generate_answer(question, context)
+        personal_context = describe_context(request.context)
+        generated_answer = (
+            await generate_answer(question, context, personal_context)
+            if personal_context
+            else await generate_answer(question, context)
+        )
     except (httpx.HTTPError, KeyError, ValueError) as error:
         raise HTTPException(
             status_code=502,
