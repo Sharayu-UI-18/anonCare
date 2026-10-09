@@ -1,10 +1,15 @@
+
 import re
 
-DISCLAIMER = "This information is for general education only and is not a diagnosis or medical advice."
+DISCLAIMER = (
+    "This information is for general education only and is not a diagnosis or medical advice."
+)
+
 UNCERTAINTY_ANSWER = (
     "I don’t have enough reliable information in my trusted sources to answer "
     "that question. A healthcare professional can give advice specific to you."
 )
+
 EMERGENCY_ANSWER = (
     "Your symptoms may need urgent assessment. Please contact your local "
     "emergency number or go to the nearest emergency department now, especially "
@@ -12,13 +17,28 @@ EMERGENCY_ANSWER = (
     "ask someone nearby to stay with you."
 )
 
+# Emergency phrases in English, Hindi, and Marathi.
+# Devanagari alternatives cover common ways users may describe symptoms.
 _EMERGENCY_PATTERN = re.compile(
-    r"\b(?:severe (?:abdominal |pelvic |period )?pain|unbearable pain|"
-    r"heavy bleeding|bleeding heavily|soaking (?:a |through )?(?:pad|tampon)|"
-    r"faint|fainted|fainting|passed out|can't breathe|cannot breathe|"
-    r"difficulty breathing|chest pain)\b",
+    r"severe\s+(?:(?:abdominal|pelvic|period)\s+)?pain|"
+    r"unbearable\s+pain|heavy\s+bleeding|bleeding\s+heavily|"
+    r"soaking\s+(?:(?:a|through)\s+)?(?:pad|tampon)|"
+    r"\bfaint(?:ed|ing)?\b|passed\s+out|"
+    r"can't\s+breathe|cannot\s+breathe|difficulty\s+breathing|chest\s+pain|"
+    r"सीने\s+में\s+दर्द|छाती\s+में\s+दर्द|"
+    r"साँस\s+लेने\s+में\s+(?:बहुत\s+)?(?:कठिनाई|दिक्कत|परेशानी)|"
+    r"सांस\s+लेने\s+में\s+(?:बहुत\s+)?(?:कठिनाई|दिक्कत|परेशानी)|"
+    r"बहुत\s+तेज़\s+दर्द|असहनीय\s+दर्द|"
+    r"बहुत\s+ज़्यादा\s+खून\s+बहना|बहुत\s+ज्यादा\s+खून\s+बहना|"
+    r"बेहोश(?:\s+होना|\s+हो\s+गई|\s+हो\s+गया)?|"
+    r"छातीत\s+(?:खूप\s+)?दुखत|छातीत\s+तीव्र\s+वेदना|"
+    r"श्वास\s+घेण्यास\s+(?:खूप\s+)?(?:त्रास|अडचण)|"
+    r"दम\s+लागणे|तीव्र\s+वेदना|असह्य\s+वेदना|"
+    r"खूप\s+रक्तस्राव|जास्त\s+रक्तस्राव|"
+    r"बेशुद्ध\s+पडणे",
     re.IGNORECASE,
 )
+
 _DIAGNOSIS_PATTERN = re.compile(
     r"\byou\s+(?:(?:definitely|certainly|clearly|probably|possibly|"
     r"might|may|could)\s+)?"
@@ -26,6 +46,7 @@ _DIAGNOSIS_PATTERN = re.compile(
     r"might be pregnant|may be pregnant|could be pregnant)\b",
     re.IGNORECASE,
 )
+
 _PRESCRIPTION_PATTERN = re.compile(
     r"\b(?:(?:you should|you can|you may|consider|please)\s+)?"
     r"(?:take|start|stop|increase|decrease|use|try|prescribe|recommend|suggest)\s+"
@@ -39,6 +60,7 @@ _PRESCRIPTION_PATTERN = re.compile(
     r"aspirin|naproxen|metformin|progesterone|birth control pills?)\b",
     re.IGNORECASE,
 )
+
 _CONSULT_PATTERN = re.compile(
     r"\b(?:persistent|persistently|worsening|severe|unusually heavy|"
     r"missed (?:more than one|several) periods?|pcos|pregnan(?:t|cy)|"
@@ -54,8 +76,14 @@ def is_emergency(question: str) -> bool:
 
 
 def is_unsafe_generated_answer(answer: str) -> bool:
-    return bool(_DIAGNOSIS_PATTERN.search(answer) or _PRESCRIPTION_PATTERN.search(answer))
+    return bool(
+        _DIAGNOSIS_PATTERN.search(answer)
+        or _PRESCRIPTION_PATTERN.search(answer)
+    )
 
 
 def should_consult_doctor(question: str, answer: str) -> bool:
-    return bool(_CONSULT_PATTERN.search(question) or _CONSULT_PATTERN.search(answer))
+    return bool(
+        _CONSULT_PATTERN.search(question)
+        or _CONSULT_PATTERN.search(answer)
+    )

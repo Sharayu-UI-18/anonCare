@@ -1,3 +1,4 @@
+
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -22,6 +23,7 @@ class ChatTurn(BaseModel):
 
 class AskRequest(BaseModel):
     question: str = Field(min_length=1, max_length=1000)
+    language: Literal["English", "Hindi", "Marathi"] = "English"
     history: list[ChatTurn] = Field(default_factory=list, max_length=50)
     anonymous: bool = True
     context: PersonalContext | None = None

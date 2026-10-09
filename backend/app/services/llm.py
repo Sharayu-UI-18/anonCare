@@ -1,3 +1,4 @@
+
 import os
 
 from google import genai
@@ -19,7 +20,8 @@ HARD RULES
 - Use earlier conversation only to understand follow-ups, never as a source of medical facts.
 
 CLARIFYING QUESTIONS
-- If the question is ambiguous and the answer depends on missing details (for example age, cycle length, how long symptoms have lasted, or whether the user is sexually active), do not guess. Ask one or two short clarifying questions instead of giving the full format, optionally with a brief general note.
+- If the question is ambiguous and the answer depends on missing details, do not guess.
+- Ask one or two short clarifying questions instead of giving the full format, optionally with a brief general note.
 
 ANSWER FORMAT (keep under 200 words, scannable)
 **Short answer:** one or two direct sentences.
@@ -27,34 +29,7 @@ ANSWER FORMAT (keep under 200 words, scannable)
 **What to watch for:** a few short bullets.
 **When to see a doctor:** clear red flags and when to seek care.
 
-EXAMPLES (style and structure only; take facts from the trusted context)
-
-Q: My periods are irregular. Is that bad?
-A: **Short answer:** Irregular periods are common, especially in the first few years after periods start.
-**What's normal:** Cycles that vary a bit, often 21-45 days in teens.
-**What to watch for:** Periods that stop for 3+ months, very heavy bleeding, or a sudden big change.
-**When to see a doctor:** If you soak a pad or tampon every hour or two, have severe pain, or miss periods and might be pregnant.
-
-Q: I get bad cramps. What can I do?
-A: **Short answer:** Cramps are caused by the uterus contracting and are common.
-**What's normal:** Mild to moderate aching in the lower belly just before and during your period.
-**What to watch for:** Pain that stops you from daily activities or keeps getting worse.
-**When to see a doctor:** Severe pain, pain outside your period, fever, or unusual discharge.
-
-Q: Why am I so moody before my period?
-A: **Short answer:** Hormone changes before a period can affect mood; this is called PMS.
-**What's normal:** Irritability, tiredness, or feeling low for a few days before bleeding.
-**What to watch for:** Symptoms that disrupt school, work, or relationships.
-**When to see a doctor:** If you feel hopeless or have thoughts of self-harm, seek help right away.
-
-Q: Does my cycle affect my sleep?
-A: **Short answer:** Yes, hormone shifts can make sleep lighter in the days before your period.
-**What's normal:** Some restlessness or tiredness around your period.
-**What to watch for:** Trouble sleeping for weeks or constant daytime exhaustion.
-**When to see a doctor:** If poor sleep lasts or affects your mood or daily life.
-
-Q: How does contraception work?
-A: I can help, but it depends on a few things. Are you looking for general information on methods, or about a specific one? Do you have any health conditions a clinician should know about? Either way, a doctor or clinic can help you choose what suits you.
+Follow these instructions in the user's selected response language.
 """
 
 
@@ -70,27 +45,38 @@ def _clip(text: str, limit: int) -> str:
 
 
 def format_history(history: list[dict[str, str]] | None) -> str:
-    """Keep the latest turns verbatim and compress older ones into a short summary."""
+    """Keep recent turns and summarize older conversation."""
     if not history:
         return ""
-    older, recent = history[:-RECENT_TURNS], history[-RECENT_TURNS:]
+
+    older = history[:-RECENT_TURNS]
+    recent = history[-RECENT_TURNS:]
     parts = []
+
     if older:
         summary = "; ".join(
             f"{turn['role']}: {_clip(turn['content'], SUMMARY_CHARS_PER_TURN)}"
             for turn in older
         )
         parts.append(f"Summary of earlier conversation: {summary}")
+
     if recent:
         parts.append(
             "Recent conversation:\n"
-            + "\n".join(f"{t['role']}: {_clip(t['content'], 500)}" for t in recent)
+            + "\n".join(
+                f"{turn['role']}: {_clip(turn['content'], 500)}"
+                for turn in recent
+            )
         )
+
     return "\n\n".join(parts)
 
 
 async def generate_answer(
-    question: str, context: str, history: list[dict[str, str]] | None = None,
+    question: str,
+    context: str,
+    language: str = "English",
+    history: list[dict[str, str]] | None = None,
     personal_context: str = "",
 ) -> str:
     api_key = os.getenv("GEMINI_API_KEY")
@@ -104,18 +90,35 @@ async def generate_answer(
         client = genai.Client(api_key=api_key)
 
         history_text = format_history(history)
-        history_block = f"{history_text}\n\n" if history_text else ""
+        history_block = (
+            f"Earlier conversation, for context only:\n{history_text}\n\n"
+            if history_text
+            else ""
+        )
 
-        prompt = f"""Trusted medical context:
+        prompt = f"""Response language: {language}
 
+IMPORTANT LANGUAGE INSTRUCTION:
+- Write the entire answer in {language}, regardless of the question's language.
+- For Hindi, use natural Hindi in Devanagari script.
+- For Marathi, use natural Marathi in Devanagari script.
+- Explain medical terms simply in the selected language.
+- Keep source URLs unchanged. Do not invent sources.
+- Do not copy English source text verbatim when answering in Hindi or Marathi.
+
+Trusted medical context:
 {context}
 
-{history_block}{personal_context}User question:
+{history_block}{personal_context}Current user question:
 {question}
 
-Answer the user's question using only the trusted medical context above.
-Follow the answer format, or ask a clarifying question if the question is ambiguous.
-If general user context is given, use it only to tailor tone and relevance, never to diagnose.
+Answer using only the trusted medical context for medical facts.
+Use earlier conversation only to understand follow-up questions.
+Use general user context only to tailor tone and relevance, never to diagnose.
+Do not diagnose, prescribe, or recommend medication dosages.
+If the context is insufficient, say so in {language}.
+Follow the answer format when appropriate, and ask a brief clarifying
+question if important details are missing.
 """
 
         response = await client.aio.models.generate_content(
